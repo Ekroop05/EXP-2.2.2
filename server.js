@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 
-import connectDB from "./config/db.js";   // 👈 ADD THIS
+import connectDB from "./config/db.js";
 
 import loggerMiddleware from "./middleware/loggerMiddleware.js";
 import authMiddleware from "./middleware/authMiddleware.js";
@@ -12,7 +12,7 @@ dotenv.config();
 const app = express();
 
 /* CONNECT DATABASE */
-connectDB();   // 👈 THIS WAS MISSING
+connectDB();
 
 app.use(express.json());
 
@@ -21,7 +21,7 @@ app.use(loggerMiddleware);
 
 /* Public route */
 app.get("/", (req, res) => {
-  res.send("Server Running");
+  res.send("Server Running 🚀");
 });
 
 /* Protected route */
@@ -39,6 +39,9 @@ app.get("/error", (req, res) => {
 /* Error handling middleware */
 app.use(errorMiddleware);
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+/* ✅ IMPORTANT CHANGE FOR DEPLOYMENT */
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
