@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 
 import connectDB from "./config/db.js";
+import authRoutes from "./routes/authRoutes.js";
 
 import loggerMiddleware from "./middleware/loggerMiddleware.js";
 import authMiddleware from "./middleware/authMiddleware.js";
@@ -9,15 +10,17 @@ import errorMiddleware from "./middleware/errorMiddleware.js";
 
 dotenv.config();
 
-const app = express();
+const app = express();   // ✅ FIRST create app
 
 /* CONNECT DATABASE */
 connectDB();
 
+/* Middleware */
 app.use(express.json());
-
-/* Logging middleware */
 app.use(loggerMiddleware);
+
+/* Routes */
+app.use("/api/auth", authRoutes);   // ✅ ONLY ONCE
 
 /* Public route */
 app.get("/", (req, res) => {
@@ -39,7 +42,7 @@ app.get("/error", (req, res) => {
 /* Error handling middleware */
 app.use(errorMiddleware);
 
-/* ✅ IMPORTANT CHANGE FOR DEPLOYMENT */
+/* PORT (for deployment) */
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
